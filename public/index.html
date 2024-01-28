@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Budget</title>
-    <meta name="description" content="A free personal budger app">
-    <meta name="keywords" content="app free budget finance">
+    <meta name="description" content="Manage your personal budget with this free app. Track expenses, receive alerts, and stay on budget for a happier financial life.">
+    <meta name="keywords" content="app, free, budget, finance">
+    <meta name="author" content="Fabio Nolasco">
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="main.css">
 </head>
+
 <body>
 
-<a href="#main" class="skip">Skip to content</a>
+    <a href="#main" class="skip" aria-label="Skip to main content">Skip to content</a>
 
-    <nav>
+    <nav role="navigation" aria-label="Main Navigation">
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/about.html">About</a></li>
@@ -29,73 +32,67 @@
 
     <main class="center" id="main">
 
-        <div class="page-area">
+        <section class="page-area">
 
             <article>
-                <h1>Stay on track</h1>
-                <p>
-                    Do you know where you are spending your money? If you really stop to track it down,
+                <h2>Stay on track</h2>
+                <p>Do you know where you are spending your money? If you really stop to track it down,
                     you would get surprised! Proper budget management depends on real data... and this
                     app will help you with that!
                 </p>
             </article>
-    
+
             <article>
-                <h1>Alerts</h1>
-                <p>
-                    What if your clothing budget ended? You will get an alert. The goal is to never go over the budget.
+                <h2>Alerts</h2>
+                <p>What if your clothing budget ended? You will get an alert. The goal is to never go over the budget.
                 </p>
             </article>
-    
+
             <article>
-                <h1>Results</h1>
-                <p>
-                    People who stick to a financial plan, budgeting every expense, get out of debt faster!
-                    Also, they to live happier lives... since they expend without guilt or fear... 
+                <h2>Results</h2>
+                <p>People who stick to a financial plan, budgeting every expense, get out of debt faster!
+                    Also, they live happier lives... since they expend without guilt or fear...
                     because they know it is all good and accounted for.
                 </p>
             </article>
-    
+
             <article>
-                <h1>Free</h1>
-                <p>
-                    This app is free!!! And you are the only one holding your data!
+                <h2>Free</h2>
+                <p>This app is free!!! And you are the only one holding your data!
                 </p>
             </article>
-    
+
             <article>
-                <h1>Stay on track</h1>
-                <p>
-                    Do you know where you are spending your money? If you really stop to track it down,
+                <h2>Stay on track</h2>
+                <p>Do you know where you are spending your money? If you really stop to track it down,
                     you would get surprised! Proper budget management depends on real data... and this
                     app will help you with that!
                 </p>
             </article>
-    
+
             <article>
-                <h1>Alerts</h1>
-                <p>
-                    What if your clothing budget ended? You will get an alert. The goal is to never go over the budget.
-                </p>
-            </article>
-    
-            <article>
-                <h1>Results</h1>
-                <p>
-                    People who stick to a financial plan, budgeting every expense, get out of debt faster!
-                    Also, they to live happier lives... since they expend without guilt or fear... 
-                    because they know it is all good and accounted for.
-                </p>
-            </article>
-    
-            <article>
-                <h1>Chart</h1>
-                <p>
-                    <canvas id="myChart" width="400" height="400"></canvas>
+                <h2>Alerts</h2>
+                <p>What if your clothing budget ended? You will get an alert. The goal is to never go over the budget.
                 </p>
             </article>
 
-        </div>
+            <article>
+                <h2>Results</h2>
+                <p>People who stick to a financial plan, budgeting every expense, get out of debt faster!
+                    Also, they live happier lives... since they expend without guilt or fear...
+                    because they know it is all good and accounted for.
+                </p>
+            </article>
+
+            <article>
+                <h2>Chart</h2>
+                <figure role="img" aria-labelledby="myChartCaption">
+                    <canvas id="myChart" width="400" height="400" alt="Expense Distribution Chart"></canvas>
+                    <figcaption id="myChartCaption">Expense Distribution</figcaption>
+                </figure>
+            </article>
+
+        </section>
 
     </main>
 
@@ -110,19 +107,17 @@
 
     <script>
         var dataSource = {
-                datasets: [
-                    {
-                        data: [],
-                        backgroundColor: [
-                            '#ffcd56',
-                            '#ff6384',
-                            '#36a2eb',
-                            '#fd6b19',
-                        ]
-                    }
-                ],
-                labels: []
-            };
+            datasets: [{
+                data: [],
+                backgroundColor: [
+                    '#ffcd56',
+                    '#ff6384',
+                    '#36a2eb',
+                    '#fd6b19',
+                ]
+            }],
+            labels: []
+        };
 
         function createChart() {
             var ctx = document.getElementById('myChart').getContext('2d');
@@ -134,17 +129,18 @@
 
         function getBudget() {
             axios.get('http://localhost:3000/budget')
-            .then(function (res) {
-                for (var i = 0; i < res.data.myBudget.length; i++) {
-                    dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
-                    dataSource.labels[i] = res.data.myBudget[i].title;
-                    createChart();
-                }
-            });
+                .then(function (res) {
+                    for (var i = 0; i < res.data.myBudget.length; i++) {
+                        dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
+                        dataSource.labels[i] = res.data.myBudget[i].title;
+                        createChart();
+                    }
+                });
         }
 
         getBudget();
     </script>
 
 </body>
+
 </html>
