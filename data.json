@@ -1,9 +1,9 @@
 {"myBudget":[
     {"title":"Eat out","budget":25},
-    {"title":"Rent","budget":275},
-    {"title":"Grocery","budget":110},
-    {"title":"TV","budget":160},
-    {"title":"Games","budget":120},
-    {"title":"bills","budget":90},
-    {"title":"Fee","budget":150}
+    {"title":"Rent","budget":75},
+    {"title":"Grocery","budget":10},
+    {"title":"TV","budget":16},
+    {"title":"Games","budget":12},
+    {"title":"bills","budget":9},
+    {"title":"Fee","budget":15}
     ]}

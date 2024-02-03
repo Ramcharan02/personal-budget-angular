@@ -107,3 +107,17 @@ main article {
         margin: 10px;
     }
 }
+
+.chart-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-container div {
+    margin-bottom: 10px;
+    height: 20px;
+    background-color: #36a2eb;
+    color: white;
+    text-align: right;
+    padding: 5px;
+}
