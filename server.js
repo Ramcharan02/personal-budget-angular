@@ -10,7 +10,8 @@ app.get('/hello', (req, res) => {
 });
 
 app.get('/budget', (req, res) => {
-    fs.readFile('data.json', 'utf8', (data) => {
+    fs.readFile('data.json', 'utf8', (err, data) => {
+            // Parse the JSON data
             const budgetData = JSON.parse(data);
             res.json(budgetData);
     });
