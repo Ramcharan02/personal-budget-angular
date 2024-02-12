@@ -1,66 +1,85 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Chart } from 'chart.js/auto';
-
-interface Dataset {
-  data: number[]; // Assuming 'budget' is a number
-  backgroundColor: string[];
-}
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { DataService } from '../../data.services';
+import * as d3 from 'd3';
 
 @Component({
   selector: 'pb-homepage',
   templateUrl: './homepage.component.html',
-  styleUrls: ['./homepage.component.scss'] // Corrected property name
+  styleUrls: ['./homepage.component.scss'],
 })
-export class HomepageComponent implements OnInit {
+export class HomepageComponent implements AfterViewInit {
+  @ViewChild('myChart') chartContainer!: ElementRef;
+  private svg: any;
+  private radius: number | undefined;
+  private arc: any;
+  private pie: any;
+  dataSource: any;
 
-  public dataSource: {
-    datasets: Dataset[]; // Use the Dataset interface here
-    labels: string[]; // Assuming 'title' is a string
-  } = {
-    datasets: [{
-      data: [],
-      backgroundColor: [
-          '#ffcd56',
-          '#ff6384',
-          '#36a2eb',
-          '#fd6b19',
-          '#FF5733',
-          '#28C13E',
-          '#283EA6'
-      ]
-    }],
-    labels: []
-  };
+  constructor(private dataService: DataService) {}
 
-  constructor(private http: HttpClient) { }
-
-  ngOnInit(): void {
-    this.http.get('http://localhost:3000/budget')
-      .subscribe((res: any) => {
-        console.log(res);
-        for (let i = 0; i < res.myBudget.length; i++) {
-          this.dataSource.datasets[0].data[i] = res.myBudget[i].budget;
-          this.dataSource.labels[i] = res.myBudget[i].title;
-        }
-        this.createChart(); // Assuming createChart is a method of your component
-      });
+  ngAfterViewInit(): void {
+    this.dataSource = this.dataService.dataSource;
+    this.createChart();
+    
+    console.log(this.dataSource)
   }
 
-  createChart() {
-    var ctx = document.getElementById('myChart') as HTMLCanvasElement;
-    if (ctx) {
-      var myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          datasets: this.dataSource.datasets,
-          labels: this.dataSource.labels
-        }
+  private createChart(): void {
+    this.radius = Math.min(this.chartContainer.nativeElement.offsetWidth, this.chartContainer.nativeElement.offsetHeight) / 2;
+
+    this.svg = d3.select('#myChart')
+      .append('svg')
+      .attr('width', this.chartContainer.nativeElement.offsetWidth)
+      .attr('height', this.chartContainer.nativeElement.offsetHeight)
+      .append('g')
+      .attr('transform', 'translate(' + this.chartContainer.nativeElement.offsetWidth / 2 + ',' +
+        this.chartContainer.nativeElement.offsetHeight / 2 + ')');
+
+    this.arc = d3.arc()
+      .innerRadius(this.radius * 0.4)
+      .outerRadius(this.radius * 0.8);
+
+    this.pie = d3.pie()
+      .sort(null)
+      .value((d: any) => d.value);
+      this.draw();
+  }
+
+  private draw(): void {
+    const color = d3.scaleOrdinal()
+      .domain(this.dataSource.labels)
+      .range(["#ffcd56", "#ff6384", "#36a2eb", "#fd6b19", "#ff1a1a", "#00ff00", "#0000ff"]);
+
+    const dataReady = this.pie(this.getData());
+
+    this.svg.selectAll('pieces')
+      .data(dataReady)
+      .enter()
+      .append('path')
+      .attr('d', this.arc)
+      .attr('fill', (d: any) => color(d.data.label))
+      .attr('stroke', 'white')
+      .style('stroke-width', '2.5px')
+      .style('opacity', 1);
+
+    this.svg.selectAll('labels')
+      .data(dataReady)
+      .enter()
+      .append('text')
+      .text((d: any) => d.data.label)
+      .attr('transform', (d: any) => 'translate(' + this.arc.centroid(d) + ')')
+      .style('text-anchor', 'middle');
+  }
+
+  private getData(): any[] {
+    const arr: any[] = [];
+    const labels = this.dataSource.labels;
+    for (let i = 0; i < this.dataSource.datasets[0].data.length; i++) {
+      arr.push({
+        label: labels[i],
+        value: this.dataSource.datasets[0].data[i],
       });
-    } else {
-      console.error('Failed to find element with ID "myChart"');
     }
+    return arr;
   }
-  
-
 }
