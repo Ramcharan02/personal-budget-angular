@@ -14,27 +14,33 @@ export class HomepageComponent implements AfterViewInit {
   private arc: any;
   private pie: any;
   dataSource: any;
+  rc = true;
 
   constructor(private dataService: DataService) {}
 
   ngAfterViewInit(): void {
     this.dataSource = this.dataService.dataSource;
-    this.createChart();
+    console.log(this.dataService)
+    this.dataService.rcc.subscribe((value:any)=>{
+      this.createChart();
+    this.draw();
+    })
+    
     
     console.log(this.dataSource)
   }
-
   private createChart(): void {
-    this.radius = Math.min(this.chartContainer.nativeElement.offsetWidth, this.chartContainer.nativeElement.offsetHeight) / 2;
-
+    
+    this.radius = 100
+    console.log(this.radius)
     this.svg = d3.select('#myChart')
       .append('svg')
-      .attr('width', this.chartContainer.nativeElement.offsetWidth)
-      .attr('height', this.chartContainer.nativeElement.offsetHeight)
+      .attr('width', 400)
+      .attr('height', 400)
       .append('g')
       .attr('transform', 'translate(' + this.chartContainer.nativeElement.offsetWidth / 2 + ',' +
         this.chartContainer.nativeElement.offsetHeight / 2 + ')');
-
+    console.log(this.chartContainer)
     this.arc = d3.arc()
       .innerRadius(this.radius * 0.4)
       .outerRadius(this.radius * 0.8);
@@ -42,7 +48,7 @@ export class HomepageComponent implements AfterViewInit {
     this.pie = d3.pie()
       .sort(null)
       .value((d: any) => d.value);
-      this.draw();
+      
   }
 
   private draw(): void {
@@ -69,7 +75,10 @@ export class HomepageComponent implements AfterViewInit {
       .text((d: any) => d.data.label)
       .attr('transform', (d: any) => 'translate(' + this.arc.centroid(d) + ')')
       .style('text-anchor', 'middle');
+      this.rc=false;
+      this.rc=true;
   }
+
 
   private getData(): any[] {
     const arr: any[] = [];

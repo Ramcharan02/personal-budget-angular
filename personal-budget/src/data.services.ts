@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
 
 @Injectable({
@@ -10,7 +11,7 @@ export class DataService {
   constructor(private httpClient: HttpClient) {
       this.getBudget();
   }
-
+rcc=new Subject();
 public dataSource: any = {
     datasets: [
       {
@@ -40,7 +41,9 @@ getBudget() {
       for (let i = 0; i < res.myBudget.length; i++) {
         this.dataSource.datasets[0].data[i] = res.myBudget[i].budget;
         this.dataSource.labels[i] = res.myBudget[i].title;
+        
       }
+      this.rcc.next(this.dataSource)
     });
   }
 }
