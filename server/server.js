@@ -1,9 +1,11 @@
+
 const express = require('express');
 const fs = require('fs'); // Import the 'fs' module
 const app = express();
+var cors = require('cors');
 const port = 3000;
 
-app.use('/', express.static('public'));
+app.use(cors(), express.static('public'));
 
 app.get('/hello', (req, res) => {
     res.send("hello World");
